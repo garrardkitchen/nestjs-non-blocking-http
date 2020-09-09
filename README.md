@@ -72,6 +72,34 @@ Example stdout:
 
 ```
 
+## Internal Queue
+
+You must have redis running. You can do this simply by using docker and:
+
+```bash
+$ docker run -it -p 6379:6379 redis
+```
+
+You can supply the redis configuration in the imports array of the module (app.module.ts) file, but if you're using the defaults, you can edit this.
+
+### Edge-cases
+
+Below are instructions on how you can observe how the internal Queue abstraction deals with two edge-cases; resilience and durability.
+
+The endpoint to use, to place messages on the internal Queue is:
+
+```bash
+$ for i in `seq 1 10000`; do curl http://localhost:3000/long/queued & done
+```
+
+#### Scenario: Your service fails
+
+Run your implementation `npm run start:debug`, then SIGTERM.  Now restart, and you will see - from the stdout - that it picks up the from where it left off.
+
+
+#### Scenario: Redis fails 
+
+Run your implementation `npm run start:debug`.  Now stop the the redis container.  Wait a few moments, then restart it.  You will see - from the stdout - that it picks up the from where it left off.
 
 ----
 
