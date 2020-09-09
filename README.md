@@ -92,6 +92,8 @@ The endpoint to use, to place messages on the internal Queue is:
 $ for i in `seq 1 10000`; do curl http://localhost:3000/long/queued & done
 ```
 
+To change the number of processes, change <processes> parameter here `ClusterService.clusterize(<processes>, bootstrap)` in `main.ts`
+
 #### Scenario: Your service fails
 
 Run your implementation `npm run start:debug`, then SIGTERM.  Now restart, and you will see - from the stdout - that it picks up the from where it left off.
