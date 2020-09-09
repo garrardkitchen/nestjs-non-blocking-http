@@ -10,6 +10,10 @@ export class ClusterService {
     // && !ConfigService.isDevEnvironment()
     if (cluster.isMaster ) {
       console.log(`MASTER SERVER (${process.pid}) IS RUNNING `);
+
+      console.log(`SCHED_NONE: ${cluster.SCHED_NONE}`)
+      console.log(`SCHED_RR: ${cluster.SCHED_RR}`)
+
       console.log(`cluster.schedulingPolicy=${cluster.schedulingPolicy}`)
 
       for (let i = 0; i < numCPUs; i++) {

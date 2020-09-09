@@ -1,3 +1,80 @@
+## Important
+
+You must set the ENV VAR of `NODE_CLUSTER_SCHED_POLICY="none"` so the scheduling of a request to a process is deferred to OS and avoids using RR.
+
+Set up two linux terminal sessions, in one run:
+
+```
+curl http://localhost:3000/long
+```
+
+and the other, run this:
+
+```bash
+$ for i in `seq 1 12`; do curl http://localhost:3000 & done
+```
+
+Important to run 👆 at the same time.
+
+Example stdout:
+```
+[Nest] 28142   - 09/09/2020, 4:09:42 AM   0
+[Nest] 28142   - 09/09/2020, 4:09:43 AM   10000
+[Nest] 28142   - 09/09/2020, 4:09:43 AM   20000
+[Nest] 28142   - 09/09/2020, 4:09:43 AM   30000
+[Nest] 28079   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28087   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28102   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28072   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28111   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28102   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28135   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28126   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28102   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28111   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28126   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28079   - 09/09/2020, 4:09:43 AM   / HIT
+[Nest] 28142   - 09/09/2020, 4:09:44 AM   40000
+[Nest] 28142   - 09/09/2020, 4:09:44 AM   50000
+[Nest] 28142   - 09/09/2020, 4:09:44 AM   60000
+[Nest] 28142   - 09/09/2020, 4:09:44 AM   70000
+[Nest] 28142   - 09/09/2020, 4:09:45 AM   80000
+[Nest] 28142   - 09/09/2020, 4:09:45 AM   90000
+
+```
+You will see all the `/HIT` complete before `/long` does.  If however, you `NODE_CLUSTER_SCHED_POLICY="rr"` for Round Robin, you'll see the last `/ HIT` complete after `/long` completes
+
+Example stdout:
+
+```
+[Nest] 28304   - 09/09/2020, 4:13:46 AM   0
+[Nest] 28304   - 09/09/2020, 4:13:46 AM   10000
+[Nest] 28304   - 09/09/2020, 4:13:47 AM   20000
+[Nest] 28351   - 09/09/2020, 4:13:47 AM   / HIT
+[Nest] 28327   - 09/09/2020, 4:13:47 AM   / HIT
+[Nest] 28311   - 09/09/2020, 4:13:47 AM   / HIT
+[Nest] 28385   - 09/09/2020, 4:13:47 AM   / HIT
+[Nest] 28364   - 09/09/2020, 4:13:47 AM   / HIT
+[Nest] 28335   - 09/09/2020, 4:13:47 AM   / HIT
+[Nest] 28320   - 09/09/2020, 4:13:47 AM   / HIT
+[Nest] 28367   - 09/09/2020, 4:13:47 AM   / HIT
+[Nest] 28310   - 09/09/2020, 4:13:47 AM   / HIT
+[Nest] 28342   - 09/09/2020, 4:13:47 AM   / HIT
+[Nest] 28375   - 09/09/2020, 4:13:47 AM   / HIT
+[Nest] 28304   - 09/09/2020, 4:13:47 AM   30000
+[Nest] 28304   - 09/09/2020, 4:13:47 AM   40000
+[Nest] 28304   - 09/09/2020, 4:13:48 AM   50000
+[Nest] 28304   - 09/09/2020, 4:13:48 AM   60000
+[Nest] 28304   - 09/09/2020, 4:13:48 AM   70000
+[Nest] 28304   - 09/09/2020, 4:13:48 AM   80000
+[Nest] 28304   - 09/09/2020, 4:13:49 AM   90000
+[Nest] 28304   - 09/09/2020, 4:13:49 AM   / HIT
+
+```
+
+
+----
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
