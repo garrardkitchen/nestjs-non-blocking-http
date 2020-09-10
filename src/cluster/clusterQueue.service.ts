@@ -6,11 +6,12 @@ import { worker, workers } from 'cluster';
 //const numCPUs = 3 //os.cpus().length;
 
 @Injectable()
-export class ClusterService {
+export class ClusterQueueService {
 
-  static clusterize(numCPUs: number, callback: () => void): void {
+  static clusterizeQueue(numCPUs: number, callback: () => void): void {
 
     if (cluster.isMaster ) {
+
       console.log(`MASTER SERVER (${process.pid}) IS RUNNING `);
 
       console.log(`SCHED_NONE: ${cluster.SCHED_NONE}`)
@@ -27,7 +28,7 @@ export class ClusterService {
         console.log(`worker ${worker.process.pid} died`);
       });
 
-      // console.log(cluster.workers)
+      console.log(cluster.workers)
     } else {
         callback()
     }
